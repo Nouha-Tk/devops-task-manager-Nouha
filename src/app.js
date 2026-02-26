@@ -15,4 +15,8 @@ app.use('/tasks', tasksRouter);
 // CI test change
 console.log("Testing CI with a Pull Request"); 
 
-app.listen(3000, ()=> console.log("API running on port 3000"));
+if (require.main === module){
+  app.listen(3000, ()=> console.log("API running on port 3000"));
+}
+module.exports = app;
+

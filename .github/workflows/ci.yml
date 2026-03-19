@@ -41,5 +41,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/Nouha-Tk/task-manager-api:latest
-            ghcr.io/Nouha-Tk/task-manager-api:prod
+            ghcr.io/nouha-tk/task-manager-api:latest
+            ghcr.io/nouha-tk/task-manager-api:prod

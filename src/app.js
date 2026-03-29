@@ -2,7 +2,11 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const { MongoClient } = require('mongodb');
 const tasksRouter = require('./routes/tasks');
+
+const url = process.env.MONGO_URL || "mongodb://localhost:27017";
+const client = new MongoClient(url);
 
 app.get('/', (req, res) => {
 
@@ -12,11 +16,24 @@ app.get('/', (req, res) => {
 
 app.use('/tasks', tasksRouter);
 
-// CI test change
-console.log("Testing CI with a Pull Request"); 
+async function startServer() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB");
+
+    const db = client.db("tasksdb");
+    app.locals.db = db;
+
+    app.listen(3000, () => {
+      console.log("API running on port 3000");
+    });
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+  }
+}
 
 if (require.main === module){
-  app.listen(3000, ()=> console.log("API running on port 3000"));
+  startServer();
 }
 module.exports = app;
 

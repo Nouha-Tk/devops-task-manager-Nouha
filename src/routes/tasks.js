@@ -1,15 +1,24 @@
 const express = require('express');
-const router = express.Router(); 
-const tasks = [
-  { id: 1, title: "Initial task", completed: true },
-  { id: 2, title: "Install Git and Node.js", "completed": true },
-  { id: 3, title: "Learn DevOps basics", completed: false },
-  { id: 4, title: "New Branch", completed: true}
-  
-];
+const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.json(tasks);
+// GET all tasks from MongoDB
+router.get('/', async (req, res) => {
+  const db = req.app.locals.db;
+  const tasks = await db.collection('tasks').find().toArray();
+  res.json(tasks);
+});
+
+// POST new task into MongoDB
+router.post('/', async (req, res) => {
+  const db = req.app.locals.db;
+
+  const { title, completed } = req.body;
+
+  const newTask = { title, completed };
+
+  const result = await db.collection('tasks').insertOne(newTask);
+
+  res.status(201).json(newTask);
 });
 
 module.exports = router;
